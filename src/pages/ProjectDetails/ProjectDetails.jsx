@@ -7,32 +7,46 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { InviteUserForm } from "./InviteUserForm";
 import { IssueList } from "./IssueList";
 import { ChatBox } from "./ChatBox";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProjectById } from "@/Redux/Project/Action";
+import { useParams } from "react-router-dom";
 
 export const ProjectDetails = () => {
+    const dispatch = useDispatch();
+    const {project} = useSelector(store=>store);
+    const {id} = useParams();
+
+
     const handleProjectInvitation = () => {
         console.log("Inviting a member to the project");
     };
 
+    useEffect(()=>{
+        dispatch(fetchProjectById(id));
+    },[id]);
+
     return (
         <>
+            {/* {console.log("-----> ",project.projectDetails)} */}
             <div className="mt-5 lg:px-10">
                 <div className="lg:flex gap-5 justify-between pb-4">
                     <ScrollArea className="h-screen lg:w-[69%] pr-2">
                         <div className="text-gray-400 pb-10 w-full">
-                            <h1 className="text-lg font-semibold pb-5">Project Name 1</h1>
+                            <h1 className="text-lg font-semibold pb-5">{project.projectDetails?.projectName}</h1>
                             <div className="space-y-5 pb-10">
                                 <p className="w-full md:max-w-lg lg:max-w-xl">
-                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur facere voluptatem maiores quasi labore similique ea cupiditate dolorum non totam!
+                                    {project.projectDetails?.description}
                                 </p>
                                 <div className="flex">
-                                    <p className="w-36">Project Lead :</p>
-                                    <p> Charan </p>
+                                    <p className="w-36">Project Owner :</p>
+                                    <p> {project.projectDetails?.owner?.name} </p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <p className="w-32">Members :</p>
-                                    {[1, 1, 1, 1].map((item, index) => (
-                                        <Avatar key={index}>
-                                            <AvatarFallback>C</AvatarFallback>
+                                    {project.projectDetails?.team.map((item) => (
+                                        <Avatar key={'owner'+item.id}>
+                                            <AvatarFallback>{item.name.charAt(0).toUpperCase()}</AvatarFallback>
                                         </Avatar>
                                     ))}
                                     <Dialog>
@@ -51,7 +65,7 @@ export const ProjectDetails = () => {
                                 </div>
                                 <div className="flex">
                                     <p className="w-36">Category :</p>
-                                    <p> Fullstack </p>
+                                    <p> {project.projectDetails?.category} </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-36">Team Lead :</p>
@@ -63,7 +77,7 @@ export const ProjectDetails = () => {
                             <p className="py-5 border-b text-lg -tracking-wider">Tasks</p>
                             <div className="lg:flex gap-3 justify-between py-5">
                                 <IssueList status="pending" title="Todo List" />
-                                <IssueList status="In Progress" title="In Progress" />
+                                <IssueList status="in_progress" title="In Progress" />
                                 <IssueList status="Done" title="Done" />
                             </div>
                         </section>

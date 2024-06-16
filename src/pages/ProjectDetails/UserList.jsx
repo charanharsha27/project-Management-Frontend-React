@@ -1,22 +1,30 @@
+import { assignedUserToIssue } from "@/Redux/Issue/Action";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { AvatarIcon } from "@radix-ui/react-icons";
+import { useDispatch, useSelector } from "react-redux";
 
-export const UserList = () => {
+export const UserList = ({issueDetails}) => {
+  const {project} = useSelector(store=>store);
+  const dispatch = useDispatch();
+  const handleAssignedIssueToUser = (userId) => {
+    dispatch(assignedUserToIssue(issueDetails.id,userId));
+  }
   return (
     <div className="space-y-2">
       <div className="border rounded-md">
-        <p className="py-2 px-3">{"Charan" || "Unassignee"}</p>
+        {console.log("issueDetails",issueDetails)}
+        <p className="py-2 px-3">{issueDetails.user?.name || 'unassignee'}</p>
       </div>
-      {[1,1,1,1].map( (item) => <div key={item} className="py-2 group hover:bg-slate-800 cursor-pointer flex items-center space-x-4 rounded-md border px-4">
+      {project.projectDetails?.team.map( (item) => <div key={'assignee'+item.id} onClick={()=>handleAssignedIssueToUser(item.id)} className="py-2 group hover:bg-slate-800 cursor-pointer flex items-center space-x-4 rounded-md border px-4">
+        
         <Avatar className="w-10 h-10">
           <AvatarFallback className="flex items-center justify-center w-full h-full">
-            <AvatarIcon className="w-6 h-6"/>
+            {item.name[0]}
           </AvatarFallback>
         </Avatar>
         <div className="space-y-1">
-          <p className="text-sm leading-none">Charan Harsha</p>
-          <p className="text-sm text-muted-foreground">@charan279</p>
+          <p className="text-sm leading-none">{item.name}</p>
+          <p className="text-sm text-muted-foreground">@{item.name}</p>
         </div>
       </div>)}
     </div>

@@ -6,12 +6,24 @@ import { CommentCard } from "./CommentCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { useEffect } from "react";
+import { fetchIssueById, updateIssueById } from "@/Redux/Issue/Action";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchComments } from "@/Redux/Comment/Action";
 
 export const IssueDetails = () => {
-    const { projectId, issueId } = useParams();
+    const { issueId } = useParams();
+    console.log(issueId);
+    const dispatch = useDispatch();
+    const {issue,comment} = useSelector(store=>store);
     const handleUpdateIssueStatus = (status) => {
+        dispatch(updateIssueById(issueId, status));
         console.log("status", status); 
     }
+    useEffect(()=>{
+        dispatch(fetchIssueById(issueId));
+        dispatch(fetchComments(issueId));
+    },[])
     return (
         <div className="px-20 py-8 text-gray-400">
 
@@ -19,10 +31,10 @@ export const IssueDetails = () => {
 
                 <ScrollArea className="h-[80vh] w-[60%]" >
                     <div>
-                        <h1 className="text-xl font-semibold text-gray-400">Create navbar</h1>
+                        <h1 className="text-xl font-semibold text-gray-400">{issue.issueDetails?.title}</h1>
 
                         <div className="py-5">
-                            <h2 className="font-semibold text-gray-400">Description</h2>
+                            <h2 className="font-semibold text-gray-400">{issue.issueDetails?.description}</h2>
                             <p className="text-gray-400 text-sm mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, quo.</p>
                         </div>
                     </div>
@@ -50,7 +62,7 @@ export const IssueDetails = () => {
                             <TabsContent value="comments">
                                 <CreateCommentForm issueId={issueId} />
                                 <div className="mt-8 space-y-6">
-                                    {[1, 1, 1, 1].map((item) => <CommentCard key={item} />)}
+                                    {comment.comments?.map((item) => <CommentCard key={item} item={item} />)}
                                 </div>
                             </TabsContent>
                         </Tabs>
@@ -60,7 +72,7 @@ export const IssueDetails = () => {
                 <div className="w-full lg:w-[30%] space-y-2">
                     <Select onValueChange={handleUpdateIssueStatus}>
                         <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Theme" />
+                            <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="pending">To Do</SelectItem>
@@ -75,12 +87,15 @@ export const IssueDetails = () => {
                             <div className="space-y-7">
                                 <div className="flex gap-10 items-center">
                                     <p className="w-[7rem]">Assignee</p>
-                                    <div className="flex items-center gap-3">
+                                    {console.log("## ",issue.issueDetails?.user?.name)}
+                                    {issue.issueDetails?.user ? <div className="flex items-center gap-3">
                                         <Avatar className="h-8 w-8 text-xs">
-                                            <AvatarFallback>Z</AvatarFallback>
+                                            <AvatarFallback>{issue.issueDetails?.user.name[0]}</AvatarFallback>
                                         </Avatar>
-                                        <p>Charan</p>
-                                    </div>
+                                        <p>{issue.issueDetails?.user.name}</p>
+                                        </div>:<p>Unassigned</p>  
+                                    }
+                                    
                                 </div>
 
                                 <div className="flex gap-10 items-center">
@@ -92,7 +107,7 @@ export const IssueDetails = () => {
                                     <p className="w-[7rem]">Status</p>
                                     <div className="flex items-center gap-3">
                                         <Badge>
-                                            In Progress
+                                            {issue.issueDetails?.status}
                                         </Badge>
                                     </div>
                                 </div>

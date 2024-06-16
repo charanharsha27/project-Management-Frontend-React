@@ -18,16 +18,16 @@ const projectReducer = (state=initialState,action) => {
         case FETCH_PROJECT_BY_ID_REQUEST:
             return {...state,loading:true,error:null}
         case FETCH_PROJECTS_SUCCESS:
-            return {...state,loading:false,projects:action.payload,error:null}
+            return {...state,loading:false,projects:action.projects,error:null}
         case SEARCH_PROJECT_SUCCESS:
-            return {...state,loading:false,searchProjects:action.payload,error:null}
+            return {...state,loading:false,searchProjects:action.searchProjects,error:null}
         case CREATE_PROJECT_SUCCESS:
-            return {...state,loading:false,projects:[...state.projects,action.project]}
+            return {...state,loading:false,projects:[...state.projects,action.projects]}
         case FETCH_PROJECT_BY_ID_SUCCESS:
             return {...state,loading:false,projectDetails:action.project}
             case DELETE_PROJECT_SUCCESS:
                 return {...state,loading:false,projects:state.projects.filter(
-                    (project) => project.id === action.projectId
+                    (project) => project.id !== action.projectId
                 ),
                 error:null}
         default:

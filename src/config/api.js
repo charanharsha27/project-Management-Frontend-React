@@ -1,7 +1,9 @@
 import axios from "axios"
 
-export const API_URL = 'http://localhost:5173/'
-const api = axios.create({API_URL})
+export const API_URL = 'http://localhost:5454/'
+const api = axios.create({
+    baseURL: API_URL
+});
 
 const jwt = localStorage.getItem('jwt')
 api.defaults.headers.common['Authorization'] = `Bearer ${jwt}`

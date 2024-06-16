@@ -13,7 +13,7 @@ export const Auth = () => {
                     <div className="loginBox w-full px-10 space-y-5">
                         {active ? <Signup /> : <Login />}
                         <div>
-                            <span className="text-gray-400">Already have an account?</span>
+                            
                             <Button
                                 variant="ghost"
                                 onClick={() => setActive(!active)}>

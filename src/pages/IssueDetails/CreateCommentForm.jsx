@@ -1,19 +1,25 @@
+import { createComment } from "@/Redux/Comment/Action";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 export const CreateCommentForm = ({issueId}) => {
+
+    const dispatch = useDispatch();
     
     const form = useForm({
         defaultValues: {
-            email : ""
+            content : ""
         },
     });
 
     const onSubmit = (data) => {
+        console.log(issueId,data);
+        dispatch(createComment({comment:data.content,issueId}))
         console.log("form submitted",data);
     };
 
@@ -21,7 +27,7 @@ export const CreateCommentForm = ({issueId}) => {
     <div>
         <Form {...form}>
                 <form className="flex gap-2" onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField control={form.control} name="email" render={({ field }) => (
+                    <FormField control={form.control} name="content" render={({ field }) => (
                         <FormItem className="flex gap-2">
                             <div className="flex gap-2"></div>
                             <div>

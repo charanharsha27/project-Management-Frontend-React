@@ -1,18 +1,23 @@
+import { register } from "@/Redux/Auth/Action";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 export const Signup = () => {
+    const dispatch = useDispatch();
     const form = useForm({
         defaultValues: {
             email: "",
             fullName: "",
-            password: ""
+            password: "",
+            jwt: "",
         },
     });
 
     const onSubmit = (data) => {
+        dispatch(register(data));
         console.log("form submitted", data);
     };
 
@@ -42,7 +47,7 @@ export const Signup = () => {
                     <FormField control={form.control} name="password" render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input {...field} type="text" className="border w-full bg-gray-700 px-5 py-5" placeholder="Enter Password" />
+                                <Input {...field} type="password" className="border w-full bg-gray-700 px-5 py-5" placeholder="Enter Password" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

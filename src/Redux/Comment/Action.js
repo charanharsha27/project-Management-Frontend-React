@@ -4,7 +4,7 @@ import { CREATE_COMMENT_FAILURE, CREATE_COMMENT_REQUEST, CREATE_COMMENT_SUCCESS,
 export const createComment = (commentData) => async(dispatch)=>{
     dispatch({type : CREATE_COMMENT_REQUEST})
     try {
-        const response = await api.post('/api/comments',commentData);
+        const response = await api.post('/api/comments/create-comment',commentData);
         console.log('comment created',response);
         dispatch({type : CREATE_COMMENT_SUCCESS,comment : response.data});
     } catch (error) {
@@ -19,7 +19,7 @@ export const createComment = (commentData) => async(dispatch)=>{
 export const deleteComment = (commentId) => async(dispatch)=>{
     dispatch({type:DELETE_COMMENT_REQUEST})
     try {
-        await api.delete(`/api/comments/${commentId}`);
+        await api.delete(`/api/comments/delete/${commentId}`);
         dispatch({type : DELETE_COMMENT_SUCCESS,commentId})
     } catch (error) {
         dispatch({
